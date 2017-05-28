@@ -20,6 +20,13 @@ if(MSVC)
   add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
 endif()
 
+# collect executables
+function(add_executable)
+  _add_executable(${ARGN})
+  list(APPEND EXECUTABLE_TARGETS ${ARGV0})
+  set(EXECUTABLE_TARGETS ${EXECUTABLE_TARGETS} CACHE INTERNAL "")
+endfunction()
+
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
@@ -44,3 +51,9 @@ source_group("Include Files" FILES ${INC})
 
 add_executable(skadi ${SRC} ${INC})
 target_link_libraries(skadi Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL)
+
+get_filename_component(Qt5_PATH "${Qt5_DIR}/../../../bin" ABSOLUTE)
+set(RUNTIME_ENVIRONMENT "PATH=${Qt5_PATH}")
+# string(REGEX REPLACE "/" "\\\\" RUNTIME_ENVIRONMENT ${RUNTIME_ENVIRONMENT})
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/vs.props.in ${CMAKE_CURRENT_BINARY_DIR}/vs.props)
+set_target_properties(${EXECUTABLE_TARGETS} PROPERTIES VS_USER_PROPS ${CMAKE_CURRENT_BINARY_DIR}/vs.props)
