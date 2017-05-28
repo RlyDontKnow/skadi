@@ -1,0 +1,152 @@
+{
+  "graph": {
+    "connections": [
+      {
+        "destination": 1,
+        "signal": "output_test_2",
+        "slot": "input_test_1",
+        "source": 0,
+        "uid": 0
+      },
+      {
+        "destination": 0,
+        "signal": "data",
+        "slot": "input_test_2",
+        "source": 2,
+        "uid": 1
+      },
+      {
+        "destination": 3,
+        "signal": "output_test_1",
+        "slot": "data",
+        "source": 1,
+        "uid": 2
+      },
+      {
+        "destination": 1,
+        "signal": "output_test_1",
+        "slot": "input_test_2",
+        "source": 0,
+        "uid": 3
+      }
+    ],
+    "nodes": [
+      {
+        "type": 0,
+        "uid": 0
+      },
+      {
+        "type": 0,
+        "uid": 1
+      },
+      {
+        "type": 1,
+        "uid": 2
+      },
+      {
+        "type": 2,
+        "uid": 3
+      }
+    ]
+  },
+  "layout": {
+    "node_layout": [
+      {
+        "position": [
+          185,
+          456
+        ],
+        "uid": 0
+      },
+      {
+        "position": [
+          551,
+          186
+        ],
+        "uid": 1
+      },
+      {
+        "position": [
+          133,
+          120
+        ],
+        "uid": 2
+      },
+      {
+        "position": [
+          969,
+          441
+        ],
+        "uid": 3
+      }
+    ]
+  },
+  "type_registry": {
+    "data_types": [
+      {
+        "guid": 0,
+        "name": "int"
+      },
+      {
+        "guid": 1,
+        "name": "float"
+      }
+    ],
+    "node_types": [
+      {
+        "guid": 0,
+        "inputs": [
+          {
+            "name": "input_test_1",
+            "type": 0
+          },
+          {
+            "name": "input_test_2",
+            "type": 1
+          },
+          {
+            "name": "input_test_3",
+            "type": 2
+          },
+          {
+            "name": "input_test_4_long",
+            "type": 3
+          }
+        ],
+        "name": "test",
+        "outputs": [
+          {
+            "name": "output_test_1",
+            "type": 1
+          },
+          {
+            "name": "output_test_2",
+            "type": 0
+          }
+        ]
+      },
+      {
+        "guid": 1,
+        "inputs": [],
+        "name": "source",
+        "outputs": [
+          {
+            "name": "data",
+            "type": 0
+          }
+        ]
+      },
+      {
+        "guid": 2,
+        "inputs": [
+          {
+            "name": "data",
+            "type": 0
+          }
+        ],
+        "name": "sink",
+        "outputs": []
+      }
+    ]
+  }
+}
