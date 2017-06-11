@@ -8,9 +8,9 @@ namespace skadi
 
 namespace constants
 {
-  static QColor background_color(53, 53, 53);
-  static QColor grid_color_fine(60, 60, 60);
-  static QColor grid_color_coarse(25, 25, 25);
+  static QColor background_color(255, 255, 255);
+  static QColor grid_color_fine(200, 200, 200);
+  static QColor grid_color_coarse(130, 130, 130);
 }
 
 ui_view::ui_view(ui_scene *scene)
@@ -19,8 +19,8 @@ ui_view::ui_view(ui_scene *scene)
 {
   setBackgroundBrush(constants::background_color);
 
-  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
-  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+  setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   
   setDragMode(QGraphicsView::ScrollHandDrag);
   setRenderHint(QPainter::Antialiasing);
@@ -122,6 +122,20 @@ void ui_view::showEvent(QShowEvent *event)
 {
   scene->setSceneRect(this->rect());
   QGraphicsView::showEvent(event);
+}
+
+void ui_view::wheelEvent(QWheelEvent *event)
+{
+  static qreal const scaling = 1.1;
+  static qreal const inv_scaling = 1.0 / scaling;
+  if(event->delta() > 0)
+  {
+    scale(scaling, scaling);
+  }
+  else
+  {
+    scale(inv_scaling, inv_scaling);
+  }
 }
 
 } // namespace skadi

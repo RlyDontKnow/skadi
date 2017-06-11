@@ -34,25 +34,25 @@ public:
 
   node_type const &get_type_info() const;
 
-  void keyPressEvent(QKeyEvent *) override;
-
 signals:
   void positionChanged();
 
 private:
+  void keyPressEvent(QKeyEvent *) override;
+
   int type() const override;
 
   QRectF boundingRect() const override;
-  void paint(QPainter *painter, QStyleOptionGraphicsItem const *option, QWidget *widget) override;
-  QVariant itemChange(GraphicsItemChange change, QVariant const &value) override;
+  void paint(QPainter *, QStyleOptionGraphicsItem const *, QWidget *) override;
+  QVariant itemChange(GraphicsItemChange, QVariant const &) override;
 
   void calculate_layout();
 
-  int get_output_index(QPointF pos) const;
-  void mousePressEvent(QGraphicsSceneMouseEvent *event) override;
+  int get_output_index(QPointF) const;
+  void mousePressEvent(QGraphicsSceneMouseEvent *) override;
 
-  void hoverEnterEvent(QGraphicsSceneHoverEvent *event) override;
-  void hoverLeaveEvent(QGraphicsSceneHoverEvent *event) override;
+  void hoverEnterEvent(QGraphicsSceneHoverEvent *) override;
+  void hoverLeaveEvent(QGraphicsSceneHoverEvent *) override;
 
   ui_scene *parent;
   node_type type_info;

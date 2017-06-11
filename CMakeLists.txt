@@ -50,7 +50,7 @@ file(GLOB INC "include/*.h" "include/*.hpp")
 source_group("Source Files" FILES ${SRC})
 source_group("Include Files" FILES ${INC})
 
-add_executable(skadi ${SRC} ${INC})
+add_executable(skadi ${SRC} ${INC} ${ui_src})
 target_link_libraries(skadi Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL Qt5::Test)
 
 get_filename_component(Qt5_PATH "${Qt5_DIR}/../../../bin" ABSOLUTE)

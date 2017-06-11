@@ -191,13 +191,13 @@ QStringList skadi::ui_library_model::mimeTypes() const
   return result;
 }
 
-QMimeData *skadi::ui_library_model::mimeData(QModelIndexList const &indexes) const
+QMimeData *skadi::ui_library_model::mimeData(QModelIndexList const &indices) const
 {
-  if(indexes.size() != 1)
+  if(indices.size() != 1)
   {
     return nullptr;
   }
-  auto &&variant = model[indexes[0].internalId()];
+  auto &&variant = model[indices[0].internalId()];
   if(variant.index() != 1) // not a node_item
   {
     return nullptr;

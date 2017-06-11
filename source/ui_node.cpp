@@ -16,21 +16,16 @@ namespace skadi
 
 namespace constants
 {
-  static qreal const opacity = 0.8;
-
   static qreal const text_vertical_spacing = 10;
   static qreal const text_horizontal_spacing = 10;
   static qreal const text_inner_spacing = 40;
 
-  static QColor const shadow_color(20, 20, 20);
-  static QPointF const shadow_offset(4, 4);
-  static qreal const shadow_blur_radius = 20;
-
   static qreal const connection_radius = 5;
   static qreal const connection_interaction_radius = 40;
 
-  static QColor const boundary_color_default(255, 255, 255);
-  static QColor const boundary_color_selected(255, 165, 0);
+  static QColor const boundary_color_default(192, 192, 192);
+  static QColor const boundary_color_hovered(255, 200, 30);
+  static QColor const boundary_color_selected(210, 165, 0);
   static qreal const boundary_radius = 3;
 
   static QColor const caption_color(255, 255, 255);
@@ -38,7 +33,7 @@ namespace constants
   static QColor const port_font_color_default(255, 255, 255);
   static QColor const port_font_color_empty(160, 160, 160);
 
-  static qreal const pen_width_default = 1;
+  static qreal const pen_width_default = 2;
   static qreal const pen_width_hovered = 3;
 
   static std::pair<qreal, QColor> const gradient_colors[]
@@ -102,16 +97,6 @@ ui_node::ui_node(node_type const &type_info)
   setFlag(QGraphicsItem::ItemSendsScenePositionChanges, true);
 
   setCacheMode(QGraphicsItem::DeviceCoordinateCache);
-
-  {
-    auto effect = new QGraphicsDropShadowEffect;
-    effect->setOffset(constants::shadow_offset);
-    effect->setBlurRadius(constants::shadow_blur_radius);
-    effect->setColor(constants::shadow_color);
-
-    setGraphicsEffect(effect);
-  }
-  setOpacity(constants::opacity);
 
   setAcceptHoverEvents(true);
   setZValue(0);
@@ -215,7 +200,7 @@ void ui_node::paint(QPainter *painter, QStyleOptionGraphicsItem const *option, Q
 
   { // draw bounds
     auto pen = painter->pen();
-    pen.setColor(isSelected() ? constants::boundary_color_selected : constants::boundary_color_default);
+    pen.setColor(isSelected() ? constants::boundary_color_selected : is_hovered ? constants::boundary_color_hovered : constants::boundary_color_default);
     pen.setWidthF(is_hovered ? constants::pen_width_hovered : constants::pen_width_default);
     painter->setPen(pen);
 

@@ -2,13 +2,18 @@
 #include "picojson.h"
 #include "ui_library.h"
 #include "ui_scene.h"
+#include "ui_tree_filter.h"
 #include "ui_view.h"
 
 #include <fstream>
 #include <iterator>
 
 #include "QtWidgets/QApplication"
+#include "QtWidgets/QDockWidget"
+#include "QtWidgets/QLineEdit"
+#include "QtWidgets/QMainWindow"
 #include "QtWidgets/QTreeView"
+#include "QtWidgets/QVboxLayout"
 
 using namespace skadi;
 
@@ -37,6 +42,38 @@ void save(picojson::object const &config, std::string const &config_file)
   }
 }
 
+void setup_ui(ui_view *scene_view, ui_library_model *library_model)
+{
+  auto window = new QMainWindow;
+  window->setObjectName("Skadi");
+  window->resize(1280, 960);
+  auto widget = new QWidget(window);
+  auto widget_layout = new QVBoxLayout(widget);
+  widget_layout->addWidget(scene_view);
+  window->setCentralWidget(widget);
+
+  auto dock = new QDockWidget(window);
+  window->addDockWidget(static_cast<Qt::DockWidgetArea>(1), dock);
+  dock->setFeatures(QDockWidget::DockWidgetMovable | QDockWidget::DockWidgetFloatable);
+  auto dock_widget = new QWidget();
+  dock->setWidget(dock_widget);
+  auto dock_layout = new QVBoxLayout(dock_widget);
+
+  auto library_filter = new QLineEdit(dock_widget);
+  dock_layout->addWidget(library_filter);
+  auto library_view = new QTreeView(dock_widget);
+  dock_layout->addWidget(library_view);
+  library_view->setHeaderHidden(true);
+  library_view->setDragEnabled(true);
+  auto filtered_library_model = new ui_tree_filter(library_view);
+  filtered_library_model->setSourceModel(library_model);
+  library_view->setModel(filtered_library_model);
+  library_view->expandAll();
+  QObject::connect(library_filter, &QLineEdit::textChanged, filtered_library_model, &ui_tree_filter::setFilterWildcard);
+
+  window->show();
+}
+
 int main(int argc, char *argv[])
 try
 {
@@ -48,6 +85,8 @@ try
 
   ui_scene scene(type_registry);
   ui_view view(&scene);
+
+  ui_library_model library_model(type_registry);
   
   try
   {
@@ -59,17 +98,7 @@ try
     // nothing to be done - just start fresh if it failed
   }
   
-  view.setWindowTitle("editor");
-  view.resize(1280, 960);
-  view.show();
-
-  ui_library_model library_model(type_registry);
-  QTreeView library_view;
-  library_view.setModel(&library_model);
-  library_view.setHeaderHidden(true);
-  library_view.setDragEnabled(true);
-  library_view.resize(640, 960);
-  library_view.show();
+  setup_ui(&view, &library_model);
 
   int result = app.exec();
 

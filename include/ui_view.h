@@ -19,13 +19,13 @@ public:
   ui_view(ui_view const &) = delete;
   ui_view &operator=(ui_view const &) = delete;
 
+private:
   void dragEnterEvent(QDragEnterEvent *) override;
   void dragMoveEvent(QDragMoveEvent *) override;
   void dropEvent(QDropEvent *) override;
-
-private:
-  void drawBackground(QPainter *painter, QRectF const &r) override;
-  void showEvent(QShowEvent *event) override;
+  void drawBackground(QPainter *, QRectF const &) override;
+  void showEvent(QShowEvent *) override;
+  void wheelEvent(QWheelEvent *) override;
 
   ui_scene *scene;
 };
