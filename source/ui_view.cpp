@@ -1,5 +1,8 @@
 #include "ui_view.h"
 
+#include "QtCore/QMimeData"
+#include "QtGui/QDropEvent"
+
 namespace skadi
 {
 
@@ -28,6 +31,47 @@ ui_view::ui_view(ui_scene *scene)
 }
 
 ui_view::~ui_view() = default;
+
+void ui_view::dragEnterEvent(QDragEnterEvent *event)
+{
+  if(event->mimeData()->formats().contains("application/x-skadinodetype"))
+  {
+    event->accept();
+  }
+}
+
+void ui_view::dragMoveEvent(QDragMoveEvent *event)
+{
+  if(event->mimeData()->formats().contains("application/x-skadinodetype"))
+  {
+    event->accept();
+  }
+}
+
+void ui_view::dropEvent(QDropEvent *event)
+{
+  if(!(event->possibleActions() & Qt::CopyAction))
+  {
+    return;
+  }
+
+  auto const mime_data = event->mimeData();
+  auto const id_data = mime_data->data("application/x-skadinodetype");
+  node_type_id id{};
+  if(id_data.size() != sizeof(id))
+  {
+    return;
+  }
+  std::copy(id_data.begin(), id_data.end(), reinterpret_cast<char *>(&id));
+
+  event->setDropAction(Qt::CopyAction);
+  event->accept();
+
+  auto const pos = event->pos();
+  auto const scene_pos = mapToScene(pos);
+
+  scene->create_node(id, pos);
+}
 
 void ui_view::drawBackground(QPainter *painter, QRectF const &r)
 {

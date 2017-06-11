@@ -25,6 +25,10 @@ public:
   QModelIndex parent(QModelIndex const &index) const override;
   int rowCount(QModelIndex const &parent = QModelIndex()) const override;
   int columnCount(QModelIndex const &parent = QModelIndex()) const override;
+  Qt::DropActions supportedDragActions() const override;
+  Qt::DropActions supportedDropActions() const override;
+  QStringList mimeTypes() const override;
+  QMimeData *mimeData(QModelIndexList const &indexes) const override;
 
 private:
   bool is_valid_index(QModelIndex const &) const;

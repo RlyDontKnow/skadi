@@ -54,6 +54,8 @@ public:
   bool is_input_connected(ui_node *node, int port);
   bool is_output_connected(ui_node *node, int port);
 
+  void create_node(node_type_id, QPointF pos);
+
 public slots:
   void remove_connection(connection_instance_id);
   void remove_node(node_instance_id);
@@ -66,7 +68,8 @@ private:
   std::map<node_instance_id, ui_node *> nodes;
   std::map<connection_instance_id, ui_connection *> connections;
 
-  int64_t last_uid;
+  int64_t last_node_uid;
+  int64_t last_connection_uid;
 };
 
 } // namespace skadi

@@ -1,8 +1,11 @@
 #include "ui_library.h"
 
-#include <cassert>
 #include <algorithm>
+#include <cassert>
 #include <optional>
+#include <memory>
+
+#include "QtCore/QMimeData"
 
 namespace skadi
 {
@@ -95,9 +98,23 @@ QVariant ui_library_model::data(QModelIndex const &index, int role) const
   }
 }
 
-Qt::ItemFlags ui_library_model::flags(QModelIndex const &) const
+Qt::ItemFlags ui_library_model::flags(QModelIndex const &index) const
 {
-  return Qt::ItemIsSelectable | Qt::ItemIsEnabled;
+  if(is_valid_index(index))
+  {
+    if(model[index.internalId()].index() == 0) // category
+    {
+      return Qt::ItemIsEnabled;
+    }
+    else // node
+    {
+      return Qt::ItemIsEnabled | Qt::ItemIsSelectable | Qt::ItemIsDragEnabled;
+    }
+  }
+  else
+  {
+    return{};
+  }
 }
 
 QModelIndex ui_library_model::index(int row, int, QModelIndex const &parent) const
@@ -154,6 +171,44 @@ int ui_library_model::rowCount(QModelIndex const &index) const
 int ui_library_model::columnCount(QModelIndex const &) const
 {
   return 1;
+}
+
+Qt::DropActions skadi::ui_library_model::supportedDragActions() const
+{
+  return Qt::CopyAction;
+}
+
+Qt::DropActions skadi::ui_library_model::supportedDropActions() const
+{
+  return{};
+}
+
+QStringList skadi::ui_library_model::mimeTypes() const
+{
+  QStringList result;
+  result.push_back("application/x-skadinodetype");
+  result.push_back("text/plain");
+  return result;
+}
+
+QMimeData *skadi::ui_library_model::mimeData(QModelIndexList const &indexes) const
+{
+  if(indexes.size() != 1)
+  {
+    return nullptr;
+  }
+  auto &&variant = model[indexes[0].internalId()];
+  if(variant.index() != 1) // not a node_item
+  {
+    return nullptr;
+  }
+  auto &&item = std::get<1>(variant);
+
+  auto data = std::make_unique<QMimeData>();
+  data->setText(QString::fromStdString(item.name));
+  QByteArray guid(reinterpret_cast<char const *>(&item.guid), sizeof(item.guid));
+  data->setData("application/x-skadinodetype", guid);
+  return data.release();
 }
 
 bool ui_library_model::is_valid_index(QModelIndex const &index) const

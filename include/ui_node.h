@@ -34,6 +34,8 @@ public:
 
   node_type const &get_type_info() const;
 
+  void keyPressEvent(QKeyEvent *) override;
+
 signals:
   void positionChanged();
 

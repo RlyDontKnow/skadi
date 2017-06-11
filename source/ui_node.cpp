@@ -5,6 +5,7 @@
 #include <numeric>
 #include <stdexcept>
 
+#include "QtGui/QKeyEvent"
 #include "QtGui/QPainter"
 #include "QtWidgets/QGraphicsDropShadowEffect"
 #include "QtWidgets/QGraphicsSceneMouseEvent"
@@ -172,6 +173,14 @@ QColor ui_node::get_output_color(int idx) const
 node_type const &ui_node::get_type_info() const
 {
   return type_info;
+}
+
+void ui_node::keyPressEvent(QKeyEvent *event)
+{
+  if(event->key() == Qt::Key_Delete)
+  {
+    deleteLater();
+  }
 }
 
 int ui_node::type() const

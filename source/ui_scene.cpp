@@ -74,7 +74,7 @@ graph_layout load_graph_layout(picojson::value v)
 
 ui_scene::ui_scene(type_registry registry)
   : registry(registry)
-  , last_uid()
+  , last_connection_uid()
 {
 }
 
@@ -156,9 +156,8 @@ try
       throw std::runtime_error("unknown node_type: " + std::to_string(node.type.guid));
     }
 
-    auto graphics_item = new ui_node(*it);
-    addItem(graphics_item);
-    nodes.emplace(node.uid, graphics_item);
+    last_node_uid = std::max(last_node_uid, node.uid.id);
+    add_node(node.uid, new ui_node(*it));
   }
 
   auto find_index = [](auto &&range, std::string port_name)
@@ -184,7 +183,7 @@ try
     auto destination = nodes.at(connection.destination);
     auto destination_port = find_index(destination->get_type_info().inputs, connection.slot);
 
-    last_uid = std::max(last_uid, connection.uid.id);
+    last_connection_uid = std::max(last_connection_uid, connection.uid.id);
     add_connection(connection.uid, new ui_connection(source, source_port, destination, destination_port));
   }
 }
@@ -217,16 +216,16 @@ void ui_scene::set_layout(graph_layout layout)
 
 ui_connection *ui_scene::create_connection(ui_node *source, int source_port)
 {
-  if(last_uid == std::numeric_limits<int64_t>::max())
+  if(last_connection_uid == std::numeric_limits<int64_t>::max())
   {
     throw std::runtime_error("ui_scene: exceeded id space");
   }
   else
   {
-    ++last_uid;
+    ++last_connection_uid;
   }
 
-  connection_instance_id id{last_uid};
+  connection_instance_id id{last_connection_uid};
 
   auto connection = new ui_connection(source, source_port);
   add_connection(id, connection);
@@ -255,6 +254,21 @@ bool ui_scene::is_output_connected(ui_node *node, int port)
   };
   auto range = connections | map_values | transformed(std::ref(get_value));
   return find(range, std::make_pair(node, port)) != end(range);
+}
+
+void ui_scene::create_node(node_type_id id, QPointF pos)
+{
+  auto it = find_if(begin(registry.node_types), end(registry.node_types),
+                    [=](auto &&n)
+  {
+    return n.guid.guid == id.guid;
+  });
+  if(it != end(registry.node_types))
+  {
+    auto item = new ui_node(*it);
+    item->setPos(pos);
+    add_node({++last_node_uid}, item);
+  }
 }
 
 void ui_scene::remove_connection(connection_instance_id id)

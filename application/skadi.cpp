@@ -67,6 +67,7 @@ try
   QTreeView library_view;
   library_view.setModel(&library_model);
   library_view.setHeaderHidden(true);
+  library_view.setDragEnabled(true);
   library_view.resize(640, 960);
   library_view.show();
 
