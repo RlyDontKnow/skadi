@@ -70,9 +70,9 @@ namespace
   QLinearGradient create_gradient(QRectF bounds)
   {
     QLinearGradient result(QPointF(0, 0), QPointF(2.0, bounds.height()));
-    for(auto &&p : constants::gradient_colors)
+    for(auto &&[offset, color] : constants::gradient_colors)
     {
-      result.setColorAt(p.first, p.second);
+      result.setColorAt(offset, color);
     }
     return result;
   }

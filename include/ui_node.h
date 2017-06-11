@@ -20,7 +20,7 @@ class ui_node
   Q_INTERFACES(QGraphicsItem)
 
 public:
-  ui_node(node_type const &);
+  explicit ui_node(node_type const &);
   ~ui_node();
 
   ui_node(ui_node const &) = delete;

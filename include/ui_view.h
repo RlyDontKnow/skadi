@@ -13,7 +13,7 @@ class ui_view
   Q_OBJECT
 
 public:
-  ui_view(ui_scene *);
+  explicit ui_view(ui_scene *);
   ~ui_view();
 
   ui_view(ui_view const &) = delete;

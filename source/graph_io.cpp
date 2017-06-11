@@ -26,6 +26,7 @@ picojson::value save(node_type t)
   picojson::object o;
   o["guid"] = picojson::value(t.guid.guid);
   o["name"] = picojson::value(t.name);
+  o["category"] = picojson::value(t.category);
 
   picojson::array inputs;
   for(auto &&p : t.inputs)
@@ -57,6 +58,7 @@ node_type load_node_type(picojson::value v)
   auto o = v.get<picojson::object>();
   t.guid.guid = o["guid"].get<int64_t>();
   t.name = o["name"].get<std::string>();
+  t.category = o["category"].get<std::string>();
 
   for(auto &&value : o["inputs"].get<picojson::array>())
   {

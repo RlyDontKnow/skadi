@@ -15,7 +15,7 @@ endif()
 project(skadi CXX)
 
 if(MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /permissive-")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4 /std:c++latest")
   # todo: enable more warnings; /Wall is too spammy due to missing silencing in the stdlib now
   add_definitions(-DWIN32_LEAN_AND_MEAN -DNOMINMAX -D_CRT_SECURE_NO_WARNINGS -D_SCL_SECURE_NO_WARNINGS)
 endif()
@@ -36,6 +36,7 @@ find_package(Qt5 COMPONENTS
              Widgets
              Gui
              OpenGL
+             Test
              REQUIRED)
 
 add_definitions(-DPICOJSON_USE_INT64)
@@ -50,7 +51,7 @@ source_group("Source Files" FILES ${SRC})
 source_group("Include Files" FILES ${INC})
 
 add_executable(skadi ${SRC} ${INC})
-target_link_libraries(skadi Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL)
+target_link_libraries(skadi Qt5::Core Qt5::Widgets Qt5::Gui Qt5::OpenGL Qt5::Test)
 
 get_filename_component(Qt5_PATH "${Qt5_DIR}/../../../bin" ABSOLUTE)
 set(RUNTIME_ENVIRONMENT "PATH=${Qt5_PATH}")

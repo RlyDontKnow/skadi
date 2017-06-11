@@ -94,6 +94,7 @@
     ],
     "node_types": [
       {
+        "category": "processing",
         "guid": 0,
         "inputs": [
           {
@@ -126,6 +127,7 @@
         ]
       },
       {
+        "category": "sink\/source",
         "guid": 1,
         "inputs": [],
         "name": "source",
@@ -137,6 +139,7 @@
         ]
       },
       {
+        "category": "sink\/source",
         "guid": 2,
         "inputs": [
           {

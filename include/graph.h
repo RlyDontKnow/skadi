@@ -39,6 +39,7 @@ struct node_type
 {
   node_type_id guid;
   std::string name;
+  std::string category;
 
   std::vector<input> inputs;
   std::vector<output> outputs;

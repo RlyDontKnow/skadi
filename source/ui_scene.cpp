@@ -86,9 +86,10 @@ ui_scene::~ui_scene()
 void ui_scene::clear()
 {
   // clear connections first as they reference nodes
-  for(auto &&connection : connections)
+  for(auto &&[unused, connection] : connections)
   {
-    removeItem(connection.second);
+    Q_UNUSED(unused);
+    removeItem(connection);
   }
   connections.clear();
   nodes.clear();
@@ -99,11 +100,11 @@ graph ui_scene::get_content() const
 {
   graph result{};
 
-  for(auto &&p : nodes)
+  for(auto &&[id, ui_node] : nodes)
   {
     node n{};
-    n.uid = p.first;
-    n.type = p.second->get_type_info().guid;
+    n.uid = id;
+    n.type = ui_node->get_type_info().guid;
     result.nodes.emplace_back(std::move(n));
   }
 
@@ -118,18 +119,18 @@ graph ui_scene::get_content() const
     assert(it != end(nodes));
     return it->first;
   };
-  for(auto &&p : connections)
+  for(auto &&[id, ui_connection] : connections)
   {
     connection c{};
-    c.uid = p.first;
+    c.uid = id;
     
-    auto source = p.second->get_source();
-    c.source = find_node_id(source.first);
-    c.signal = source.first->get_type_info().outputs[source.second].name;
+    auto &&[source_node, signal] = ui_connection->get_source();
+    c.source = find_node_id(source_node);
+    c.signal = source_node->get_type_info().outputs[signal].name;
 
-    auto destination = p.second->get_destination();
-    c.destination = find_node_id(destination.first);
-    c.slot = destination.first->get_type_info().inputs[destination.second].name;
+    auto &&[destination_node, slot] = ui_connection->get_destination();
+    c.destination = find_node_id(destination_node);
+    c.slot = destination_node->get_type_info().inputs[slot].name;
 
     result.connections.emplace_back(std::move(c));
   }
@@ -196,11 +197,11 @@ catch(std::runtime_error &)
 graph_layout ui_scene::get_layout() const
 {
   graph_layout layout{};
-  for(auto &&node : nodes)
+  for(auto &&[id, ui_node] : nodes)
   {
     node_layout l{};
-    l.node = node.first;
-    l.position = node.second->scenePos();
+    l.node = id;
+    l.position = ui_node->scenePos();
     layout.node_layouts.emplace_back(l);
   }
   return layout;

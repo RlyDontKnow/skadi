@@ -1,12 +1,14 @@
 #include "graph_io.h"
 #include "picojson.h"
-#include "ui_view.h"
+#include "ui_library.h"
 #include "ui_scene.h"
+#include "ui_view.h"
 
 #include <fstream>
 #include <iterator>
 
 #include "QtWidgets/QApplication"
+#include "QtWidgets/QTreeView"
 
 using namespace skadi;
 
@@ -60,6 +62,13 @@ try
   view.setWindowTitle("editor");
   view.resize(1280, 960);
   view.show();
+
+  ui_library_model library_model(type_registry);
+  QTreeView library_view;
+  library_view.setModel(&library_model);
+  library_view.setHeaderHidden(true);
+  library_view.resize(640, 960);
+  library_view.show();
 
   int result = app.exec();
 
