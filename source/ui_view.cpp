@@ -17,6 +17,9 @@ ui_view::ui_view(ui_scene *scene)
   : QGraphicsView(scene)
   , scene(scene)
 {
+  qreal max = 50000;
+  setSceneRect(-max, -max, 2 * max, 2 * max);
+
   setBackgroundBrush(constants::background_color);
 
   setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);

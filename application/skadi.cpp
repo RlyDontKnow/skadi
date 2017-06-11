@@ -92,6 +92,7 @@ try
   {
     scene.set_content(load_graph(config["graph"]));
     scene.set_layout(load_graph_layout(config["layout"]));
+    view.centerOn(scene.itemsBoundingRect().center());
   }
   catch(std::runtime_error &)
   {
